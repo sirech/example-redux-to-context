@@ -1,5 +1,3 @@
-export const FETCH_PRODUCTS = 'products:fetch'
-
 const mockProducts = [
   {
     name: 'Chair',
@@ -23,13 +21,6 @@ const mockProducts = [
   },
 ]
 
-export const fetchProductsAction = (products) => ({
-  type: FETCH_PRODUCTS,
-  payload: products,
-})
-
-export const fetchProducts = () => {
-  return async (dispatch) => {
-    dispatch(fetchProductsAction(mockProducts))
-  }
+export const fetchProducts = async () => {
+  return Promise.resolve(mockProducts)
 }

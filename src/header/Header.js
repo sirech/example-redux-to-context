@@ -1,12 +1,12 @@
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useTheme } from 'themeProvider'
 import cx from 'classnames'
-
-import { toggleAction } from './actions'
 
 import styles from './Header.module.css'
 
-const Header = ({ foreground, background, toggle }) => {
+const Header = () => {
+  const { theme, toggle } = useTheme()
+  const { foreground, background } = theme
+
   return (
     <header
       className={cx(
@@ -32,14 +32,4 @@ const Header = ({ foreground, background, toggle }) => {
   )
 }
 
-Header.propTypes = {
-  foreground: PropTypes.string.isRequired,
-  background: PropTypes.string.isRequired,
-}
-
-export default connect(
-  (state) => state.theme,
-  (dispatch) => ({
-    toggle: () => dispatch(toggleAction()),
-  })
-)(Header)
+export default Header

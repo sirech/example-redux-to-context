@@ -1,43 +1,33 @@
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
-
 import Heading from './Heading'
 import Item from './Item'
 import Summary from './Summary'
 
-import { fullCartSelector, totalSelector } from './selectors'
+import { fullCart, total } from './selectors'
+import { useCart } from 'cartProvider'
+import { useProducts } from 'productsProvider'
+import { useMemo } from 'react'
 
 import styles from './Cart.module.css'
 
-const Cart = ({ cart, total }) => {
+const Cart = () => {
+  const products = useProducts()
+  const { cart } = useCart()
+
+  const extendedCart = useMemo(() => fullCart(products, cart), [products, cart])
+  const price = useMemo(() => total(products, cart), [products, cart])
+
   return (
     <>
       <h2>Cart</h2>
       <section className={styles.table} data-testid="cart">
         <Heading boxed></Heading>
-        {cart.map((item) => (
+        {extendedCart.map((item) => (
           <Item key={item.name} {...item}></Item>
         ))}
-        <Summary boxed price={total}></Summary>
+        <Summary boxed price={price}></Summary>
       </section>
     </>
   )
 }
 
-Cart.propTypes = {
-  cart: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      quantity: PropTypes.number.isRequired,
-    })
-  ),
-  total: PropTypes.string.isRequired,
-}
-
-export default connect((state) =>
-  createStructuredSelector({
-    cart: fullCartSelector,
-    total: totalSelector,
-  })(state)
-)(Cart)
+export default Cart
